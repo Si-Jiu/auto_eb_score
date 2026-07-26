@@ -527,6 +527,7 @@
                 font-family:Roboto,"Segoe UI",system-ui,-apple-system,sans-serif;
                 width:328px;color:var(--eb-on-surface);line-height:normal;
                 -webkit-font-smoothing:antialiased;
+                transition:background-color .3s ease;
             }
             #eb-auto-panel.eb-theme-light{
                 --eb-surface:#FEF7FF;--eb-surface-1:#F7F2FA;--eb-surface-2:#F3EDF7;--eb-surface-3:#ECE6F0;
@@ -541,11 +542,13 @@
             #eb-panel-inner{
                 background:var(--eb-surface-1);border-radius:28px;overflow:hidden;
                 box-shadow:0 8px 12px 6px rgba(0,0,0,.15),0 4px 4px rgba(0,0,0,.3);
+                transition:background-color .3s ease,box-shadow .3s ease;
             }
             /* Top app bar */
             #eb-panel-title{
                 display:flex;align-items:center;gap:8px;height:56px;padding:0 8px 0 20px;
                 background:var(--eb-surface-3);cursor:grab;user-select:none;
+                transition:background-color .3s ease;
             }
             #eb-panel-title:active{cursor:grabbing}
             #eb-title-text{font-size:16px;font-weight:500;letter-spacing:.15px;flex:1}
@@ -604,10 +607,11 @@
             #eb-panel-body::-webkit-scrollbar{display:none}
             #eb-panel-body.collapsed{max-height:0;padding-top:0;padding-bottom:0;overflow:hidden}
             /* Cards */
-            #eb-auto-panel .eb-card{
+            #eb-auto-panel             .eb-card{
                 border:1px solid var(--eb-outline-var);border-radius:12px;
                 padding:14px 16px 16px;background:var(--eb-surface-2);
                 display:flex;flex-direction:column;gap:12px;
+                transition:background-color .3s ease,border-color .3s ease;
             }
             #eb-auto-panel .eb-card-title{
                 font-size:14px;font-weight:500;letter-spacing:.1px;color:var(--eb-on-surface);
@@ -672,7 +676,7 @@
                 position:relative;display:flex;align-items:center;justify-content:center;
                 width:100%;height:44px;border:0;border-radius:22px;cursor:pointer;overflow:hidden;
                 font-size:14px;font-weight:500;letter-spacing:.1px;
-                transition:box-shadow .15s linear,opacity .15s linear;
+                transition:box-shadow .15s linear,opacity .15s linear,background-color .3s ease,color .3s ease;
             }
             #eb-auto-panel .eb-btn::before{
                 content:'';position:absolute;inset:0;background:currentColor;opacity:0;
@@ -737,6 +741,8 @@
         document.body.appendChild(panel);
 
         applyTranslations();
+
+        try { document.getElementById('eb-version').textContent = GM_info.script.version; } catch (e) { }
 
         document.getElementById('eb-lang-select').addEventListener('change', e => {
             setLang(e.target.value);
