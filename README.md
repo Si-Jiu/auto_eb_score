@@ -14,12 +14,8 @@ lesson or batch through every matching lesson automatically.
 1. Install a userscript manager in your browser:
    - [Tampermonkey](https://www.tampermonkey.net/) (Chrome, Firefox, Edge, Safari)
    - [Violentmonkey](https://violentmonkey.github.io/) (Chrome, Firefox, Edge)
-2. Open [`eb_auto_score.user.js`](./eb_auto_score.user.js) in this repo and
-   click **Raw**, or use this direct link:
-   `https://github.com/devcme/auto_eb_score/raw/refs/heads/main/eb_auto_score.user.js`
-3. Your userscript manager should detect the script and prompt you to
-   install it. Confirm the install.
-4. Log in to English Builder — the control panel appears automatically in the top-right corner.
+2. Click [here](https://github.com/devcme/auto_eb_score/raw/refs/heads/main/eb_auto_score.user.js) and install the script.
+3. Log in to English Builder — the control panel appears automatically in the top-right corner.
 
 ### Updating
 

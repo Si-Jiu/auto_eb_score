@@ -12,11 +12,8 @@
 1. 喺瀏覽器度安裝用戶腳本管理器：
    - [Tampermonkey](https://www.tampermonkey.net/)（Chrome、Firefox、Edge、Safari）
    - [Violentmonkey](https://violentmonkey.github.io/)（Chrome、Firefox、Edge）
-2. 喺呢個倉庫度打開 [`eb_auto_score.user.js`](./eb_auto_score.user.js) 然後撳 **Raw**，
-   或者用呢個直接連結：
-   `https://github.com/devcme/auto_eb_score/raw/refs/heads/main/eb_auto_score.user.js`
-3. 你個用戶腳本管理器應該會偵測到個腳本同埋提你安裝。確認安裝。
-4. 登錄 English Builder — 控制面板會自動喺右上角出現。
+2. 撳[呢度](https://github.com/devcme/auto_eb_score/raw/refs/heads/main/eb_auto_score.user.js)然後安裝腳本。
+3. 登錄 English Builder — 控制面板會自動喺右上角出現。
 
 ### 更新
 
