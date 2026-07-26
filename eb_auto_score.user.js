@@ -768,7 +768,16 @@
             sx = e.clientX; sy = e.clientY;
             const r = panel.getBoundingClientRect();
             sl = r.left; st = r.top;
-            const move = ev => { panel.style.left = (sl + ev.clientX - sx) + 'px'; panel.style.top = (st + ev.clientY - sy) + 'px'; panel.style.right = 'auto'; };
+            const move = ev => {
+                const w = panel.offsetWidth, h = panel.offsetHeight;
+                const cw = document.documentElement.clientWidth;
+                const ch = document.documentElement.clientHeight;
+                const x = Math.max(8, Math.min(sl + ev.clientX - sx, cw - w - 8));
+                const y = Math.max(8, Math.min(st + ev.clientY - sy, ch - h - 8));
+                panel.style.left = x + 'px';
+                panel.style.top = y + 'px';
+                panel.style.right = 'auto';
+            };
             const up = () => { document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', up); };
             document.addEventListener('mousemove', move);
             document.addEventListener('mouseup', up);
