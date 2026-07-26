@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         EB Auto Score
 // @namespace    http://tampermonkey.net/
-// @version      4.0.0
+// @version      4.1.0
 // @description  Auto submit score for EB lessons
 // @match        https://lms1.wiseman.com.hk/lms/user/secure/course/eb/select_lesson/*
 // @grant        none
@@ -14,6 +14,215 @@
     const STATE_KEY = 'eb_auto_state';
     const CONFIG_KEY = 'eb_auto_config';
     const THEME_KEY = 'eb_auto_theme';
+    const LANG_KEY = 'eb_auto_lang';
+
+    const TRANSLATIONS = {
+        en_US: {
+            panelTitle: 'EB Auto Score',
+            targetScore: 'Target score',
+            fixed: 'Fixed',
+            range: 'Range',
+            to: 'to',
+            delayBetweenLessons: 'Delay between lessons',
+            min: 'Min',
+            max: 'Max',
+            delayHelp: 'Minutes. Set both to 0 to score without waiting.',
+            whichLessons: 'Which lessons',
+            incompleteNewOnly: 'Incomplete and new only',
+            alsoRedoLowScores: 'Also redo low scores',
+            redoWhenScoreBelow: 'Redo when score is below',
+            scoreAllMatching: 'Score all matching',
+            scoreCurrentLesson: 'Score current lesson',
+            stop: 'Stop',
+            countdownWaiting: 'Waiting',
+            activityLog: 'Activity log',
+            noActivityYet: 'No activity yet.',
+            nextLessonIn: 'Next lesson in {0}',
+            switchToDark: 'Switch to dark mode',
+            switchToLight: 'Switch to light mode',
+            hideActivityLog: 'Hide activity log',
+            showActivityLog: 'Show activity log',
+            collapsePanel: 'Collapse panel',
+            expandPanel: 'Expand panel',
+            msgResuming: 'Resuming...',
+            msgStopped: 'Stopped.',
+            msgStartingBatch: 'Starting batch...',
+            msgLinkNotFound: '  Link not found',
+            msgOverlayFailed: '  Overlay failed',
+            msgWaitingScorm: '  Waiting for SCORM API...',
+            msgAccessError: '  Access error: {0}',
+            msgDifficultyDetected: '  Difficulty detected, picking Challenging...',
+            msgClickedChallenging: '  Clicked Challenging',
+            msgClickedStartLessons: '  Clicked Start Lessons',
+            msgStartBtnFallback: '  Start btn fallback: XPath...',
+            msgClickedViaXpath: '  Clicked via XPath',
+            msgAnsweredQ1: '  Answered Q1 randomly',
+            msgDifficultyError: '  Difficulty error: {0}',
+            msgErrorNoApi: '  ERROR: No API',
+            msgErrorInitFailed: '  ERROR: Init failed',
+            msgXhrError: '  XHR error: {0}',
+            msgPostHttpStatus: '  POST -> HTTP {0}',
+            msgSuccess: '  SUCCESS!',
+            msgFailed: '  FAILED!',
+            msgWait3s: '  3s...',
+            msgNext: '  Next...',
+            msgDone: '  Done.',
+            msgNoLessonOpen: 'No lesson is currently open!',
+            msgCannotDetectId: 'Cannot detect lesson ID',
+            msgEnter: '=== ENTER: {0} ===',
+            msgScore: '=== SCORE: {0} ===',
+            msgCurrentLesson: '=== CURRENT LESSON ===',
+            msgNoMatchingTasks: 'No matching tasks! Done.',
+            msgFound: 'Found: {0}',
+            msgFirstVisitDone: '  First visit done, 3s...',
+            msgFirstVisit: '  First visit, 3s...',
+            msgRefreshing: '  Refreshing...',
+            msgCommittingScore: '  Committing score: {0}',
+            msgDelay: '  Delay: {0}',
+            msgFailedToOpen: '  Failed to open, skipping...',
+            langTitle: 'Language',
+            langEn: 'English',
+            langZh: '中文（香港）',
+            langYue: '粵語（香港）',
+        },
+        zh_HK: {
+            panelTitle: 'EB Auto Score',
+            targetScore: '目標分數',
+            fixed: '固定',
+            range: '範圍',
+            to: '至',
+            delayBetweenLessons: '課節之間延遲',
+            min: '最小',
+            max: '最大',
+            delayHelp: '分鐘。設為 0 則不等待直接評分。',
+            whichLessons: '選擇課節',
+            incompleteNewOnly: '僅未完成和新課節',
+            alsoRedoLowScores: '同時重做低分課節',
+            redoWhenScoreBelow: '分數低於以下時重做',
+            scoreAllMatching: '評分全部符合條件',
+            scoreCurrentLesson: '評分當前課節',
+            stop: '停止',
+            countdownWaiting: '等待中',
+            activityLog: '活動記錄',
+            noActivityYet: '暫無活動。',
+            nextLessonIn: '下一課節 {0}',
+            switchToDark: '切換到深色模式',
+            switchToLight: '切換到淺色模式',
+            hideActivityLog: '隱藏活動記錄',
+            showActivityLog: '顯示活動記錄',
+            collapsePanel: '摺疊面板',
+            expandPanel: '展開面板',
+            msgResuming: '正在恢復...',
+            msgStopped: '已停止。',
+            msgStartingBatch: '開始批量處理...',
+            msgLinkNotFound: '  找不到連結',
+            msgOverlayFailed: '  覆疊層載入失敗',
+            msgWaitingScorm: '  等待 SCORM API...',
+            msgAccessError: '  存取錯誤：{0}',
+            msgDifficultyDetected: '  檢測到難度選擇，正在選擇 Challenging...',
+            msgClickedChallenging: '  已點擊 Challenging',
+            msgClickedStartLessons: '  已點擊 Start Lessons',
+            msgStartBtnFallback: '  Start 按鈕後備：XPath...',
+            msgClickedViaXpath: '  已透過 XPath 點擊',
+            msgAnsweredQ1: '  已隨機回答 Q1',
+            msgDifficultyError: '  難度處理錯誤：{0}',
+            msgErrorNoApi: '  錯誤：沒有 API',
+            msgErrorInitFailed: '  錯誤：初始化失敗',
+            msgXhrError: '  XHR 錯誤：{0}',
+            msgPostHttpStatus: '  POST -> HTTP {0}',
+            msgSuccess: '  成功！',
+            msgFailed: '  失敗！',
+            msgWait3s: '  3 秒...',
+            msgNext: '  下一課...',
+            msgDone: '  完成。',
+            msgNoLessonOpen: '目前沒有開啟任何課節！',
+            msgCannotDetectId: '無法檢測課節 ID',
+            msgEnter: '=== 進入：{0} ===',
+            msgScore: '=== 評分：{0} ===',
+            msgCurrentLesson: '=== 當前課節 ===',
+            msgNoMatchingTasks: '沒有符合的課節！完成。',
+            msgFound: '找到：{0}',
+            msgFirstVisitDone: '  首次訪問完成，3 秒...',
+            msgFirstVisit: '  首次訪問，3 秒...',
+            msgRefreshing: '  重新整理中...',
+            msgCommittingScore: '  提交分數：{0}',
+            msgDelay: '  延遲：{0}',
+            msgFailedToOpen: '  開啟失敗，跳過...',
+            langTitle: '語言',
+            langEn: 'English',
+            langZh: '中文（香港）',
+            langYue: '粵語（香港）',
+        },
+        yue_HK: {
+            panelTitle: 'EB Auto Score',
+            targetScore: '目標分數',
+            fixed: '固定',
+            range: '範圍',
+            to: '至',
+            delayBetweenLessons: '課節之間延遲',
+            min: '最少',
+            max: '最多',
+            delayHelp: '分鐘。兩個都設做 0 就唔使等直接評分。',
+            whichLessons: '揀邊啲課節',
+            incompleteNewOnly: '只係未完成同新嘅課節',
+            alsoRedoLowScores: '亦都重做低分嘅課節',
+            redoWhenScoreBelow: '分數低過呢個就重做',
+            scoreAllMatching: '評晒全部符合條件嘅',
+            scoreCurrentLesson: '評分而家呢課',
+            stop: '停',
+            countdownWaiting: '等緊',
+            activityLog: '活動記錄',
+            noActivityYet: '暫時未有活動。',
+            nextLessonIn: '下一課節 {0}',
+            switchToDark: '轉做深色模式',
+            switchToLight: '轉做淺色模式',
+            hideActivityLog: '收埋活動記錄',
+            showActivityLog: '顯示活動記錄',
+            collapsePanel: '摺埋面板',
+            expandPanel: '打開面板',
+            msgResuming: '繼續返...',
+            msgStopped: '停咗。',
+            msgStartingBatch: '開始批量處理...',
+            msgLinkNotFound: '  搵唔到連結',
+            msgOverlayFailed: '  覆疊層載入失敗',
+            msgWaitingScorm: '  等緊 SCORM API...',
+            msgAccessError: '  存取錯誤：{0}',
+            msgDifficultyDetected: '  檢測到難度選擇，揀緊 Challenging...',
+            msgClickedChallenging: '  撳咗 Challenging',
+            msgClickedStartLessons: '  撳咗 Start Lessons',
+            msgStartBtnFallback: '  Start 掣後備：XPath...',
+            msgClickedViaXpath: '  用 XPath 撳咗',
+            msgAnsweredQ1: '  亂咁答咗 Q1',
+            msgDifficultyError: '  難度處理錯誤：{0}',
+            msgErrorNoApi: '  錯誤：冇 API',
+            msgErrorInitFailed: '  錯誤：初始化失敗',
+            msgXhrError: '  XHR 錯誤：{0}',
+            msgPostHttpStatus: '  POST -> HTTP {0}',
+            msgSuccess: '  搞掂！',
+            msgFailed: '  失敗咗！',
+            msgWait3s: '  3 秒...',
+            msgNext: '  下一課...',
+            msgDone: '  搞掂晒。',
+            msgNoLessonOpen: '而家冇開到任何課節！',
+            msgCannotDetectId: '偵測唔到課節 ID',
+            msgEnter: '=== 進入：{0} ===',
+            msgScore: '=== 評分：{0} ===',
+            msgCurrentLesson: '=== 而家呢課 ===',
+            msgNoMatchingTasks: '冇符合嘅課節！搞掂晒。',
+            msgFound: '搵到：{0}',
+            msgFirstVisitDone: '  第一次訪問完成，3 秒...',
+            msgFirstVisit: '  第一次訪問，3 秒...',
+            msgRefreshing: '  重新整理緊...',
+            msgCommittingScore: '  提交分數：{0}',
+            msgDelay: '  延遲：{0}',
+            msgFailedToOpen: '  開唔到，跳過...',
+            langTitle: '語言',
+            langEn: 'English',
+            langZh: '中文（香港）',
+            langYue: '粵語（香港）',
+        }
+    };
+
     let panel = null;
     let isMinimized = false;
     let isRunning = false;
@@ -29,6 +238,52 @@
         const m = Math.floor(s / 60);
         const sec = s % 60;
         return (m > 0 ? m + 'm ' : '') + sec + 's';
+    }
+
+    function loadLang() {
+        const lang = localStorage.getItem(LANG_KEY);
+        if (lang && TRANSLATIONS[lang]) return lang;
+        return 'en_US';
+    }
+
+    let currentLang = loadLang();
+
+    function t(key, ...args) {
+        let str = (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key])
+            || TRANSLATIONS.en_US[key] || key;
+        for (let i = 0; i < args.length; i++) {
+            str = str.replace('{' + i + '}', args[i]);
+        }
+        return str;
+    }
+
+    function setLang(lang) {
+        if (!TRANSLATIONS[lang]) return;
+        currentLang = lang;
+        localStorage.setItem(LANG_KEY, lang);
+        applyTranslations();
+    }
+
+    function applyTranslations() {
+        if (!panel) return;
+        panel.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.dataset.i18n;
+            if (key) el.textContent = t(key);
+        });
+        panel.querySelectorAll('[data-i18n-title]').forEach(el => {
+            const key = el.dataset.i18nTitle;
+            if (key) el.setAttribute('title', t(key));
+        });
+        panel.querySelectorAll('[data-i18n-aria]').forEach(el => {
+            const key = el.dataset.i18nAria;
+            if (key) el.setAttribute('aria-label', t(key));
+        });
+        const logEl = document.getElementById('eb-log');
+        if (logEl && logEl.textContent.trim() === '') {
+            logEl.setAttribute('data-empty', t('noActivityYet'));
+        }
+        const langSel = document.getElementById('eb-lang-select');
+        if (langSel) langSel.value = currentLang;
     }
 
     function loadState() { try { return JSON.parse(localStorage.getItem(STATE_KEY)); } catch (e) { return null; } }
@@ -52,7 +307,7 @@
         if (cb) {
             cb.checked = !light;
             const sw = cb.closest('.eb-switch');
-            if (sw) sw.title = light ? 'Switch to dark mode' : 'Switch to light mode';
+            if (sw) sw.title = light ? t('switchToDark') : t('switchToLight');
         }
         if (persist) localStorage.setItem(THEME_KEY, theme);
     }
@@ -105,7 +360,7 @@
         if (cb) {
             cb.checked = v;
             const sw = cb.closest('.eb-switch');
-            if (sw) sw.title = v ? 'Hide activity log' : 'Show activity log';
+            if (sw) sw.title = v ? t('hideActivityLog') : t('showActivityLog');
         }
     }
 
@@ -143,7 +398,7 @@
         el.classList.add('eb-visible');
         for (let i = seconds; i >= 0; i--) {
             if (stopRequested) { el.classList.remove('eb-visible'); bar.style.width = '0%'; return; }
-            label.textContent = 'Next lesson in ' + formatSeconds(i);
+            label.textContent = t('nextLessonIn', formatSeconds(i));
             bar.style.width = ((seconds - i) / seconds * 100).toFixed(1) + '%';
             await waitMs(1000);
         }
@@ -159,9 +414,9 @@
         panel.innerHTML = `
             <div id="eb-panel-inner">
                 <div id="eb-panel-title">
-                    <span id="eb-title-text">EB Auto Score</span>
-                    <span id="eb-version">4.0.0</span>
-                    <label class="eb-switch" title="Switch to light mode">
+                    <span id="eb-title-text" data-i18n="panelTitle">EB Auto Score</span>
+                    <span id="eb-version">4.1.0</span>
+                    <label class="eb-switch" data-i18n-title="switchToLight">
                         <input id="eb-theme-toggle" type="checkbox" checked aria-label="Dark mode"/>
                         <span class="eb-switch-track">
                             <span class="eb-switch-handle">
@@ -170,18 +425,18 @@
                             </span>
                         </span>
                     </label>
-                    <button id="eb-btn-toggle" class="eb-icon-btn" title="Collapse panel" aria-label="Collapse panel" aria-expanded="true">
+                    <button id="eb-btn-toggle" class="eb-icon-btn" data-i18n-title="collapsePanel" data-i18n-aria="collapsePanel" aria-expanded="true">
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.4 15.4 6 14l6-6 6 6-1.4 1.4L12 10.8z"/></svg>
                     </button>
                 </div>
                 <div id="eb-panel-body">
                     <fieldset class="eb-card">
-                        <legend class="eb-card-title">Target score</legend>
+                        <legend class="eb-card-title" data-i18n="targetScore">Target score</legend>
                         <div class="eb-row">
                             <label class="eb-radio">
                                 <input type="radio" name="eb-score-mode" value="fixed" checked/>
                                 <span class="eb-radio-mark"></span>
-                                <span class="eb-radio-label">Fixed</span>
+                                <span class="eb-radio-label" data-i18n="fixed">Fixed</span>
                             </label>
                             <input id="eb-score-fixed" class="eb-input" type="number" value="100" min="0" max="100" aria-label="Fixed score"/>
                         </div>
@@ -189,60 +444,71 @@
                             <label class="eb-radio">
                                 <input type="radio" name="eb-score-mode" value="random"/>
                                 <span class="eb-radio-mark"></span>
-                                <span class="eb-radio-label">Range</span>
+                                <span class="eb-radio-label" data-i18n="range">Range</span>
                             </label>
                             <input id="eb-score-min" class="eb-input" type="number" value="85" min="0" max="100" aria-label="Lowest score"/>
-                            <span class="eb-affix">to</span>
+                            <span class="eb-affix" data-i18n="to">to</span>
                             <input id="eb-score-max" class="eb-input" type="number" value="100" min="0" max="100" aria-label="Highest score"/>
                         </div>
                     </fieldset>
                     <fieldset class="eb-card">
-                        <legend class="eb-card-title">Delay between lessons</legend>
+                        <legend class="eb-card-title" data-i18n="delayBetweenLessons">Delay between lessons</legend>
                         <div class="eb-row eb-row-fields">
                             <label class="eb-field">
-                                <span class="eb-field-label">Min</span>
+                                <span class="eb-field-label" data-i18n="min">Min</span>
                                 <input id="eb-delay-min" type="number" value="0" min="0" step="0.1"/>
                             </label>
                             <label class="eb-field">
-                                <span class="eb-field-label">Max</span>
+                                <span class="eb-field-label" data-i18n="max">Max</span>
                                 <input id="eb-delay-max" type="number" value="0" min="0" step="0.1"/>
                             </label>
                         </div>
-                        <p class="eb-support">Minutes. Set both to 0 to score without waiting.</p>
+                        <p class="eb-support" data-i18n="delayHelp">Minutes. Set both to 0 to score without waiting.</p>
                     </fieldset>
                     <fieldset class="eb-card">
-                        <legend class="eb-card-title">Which lessons</legend>
+                        <legend class="eb-card-title" data-i18n="whichLessons">Which lessons</legend>
                         <div class="eb-select-wrap">
                             <select id="eb-filter-mode" aria-label="Lesson filter">
-                                <option value="incomplete">Incomplete and new only</option>
-                                <option value="score_below">Also redo low scores</option>
+                                <option value="incomplete" data-i18n="incompleteNewOnly">Incomplete and new only</option>
+                                <option value="score_below" data-i18n="alsoRedoLowScores">Also redo low scores</option>
                             </select>
                             <svg class="eb-select-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.4 8.6 12 13.2l4.6-4.6L18 10l-6 6-6-6z"/></svg>
                         </div>
                         <div id="eb-filter-score-wrap" class="eb-row">
-                            <span class="eb-affix">Redo when score is below</span>
+                            <span class="eb-affix" data-i18n="redoWhenScoreBelow">Redo when score is below</span>
                             <input id="eb-filter-score" class="eb-input" type="number" value="100" min="0" max="100" aria-label="Score threshold"/>
                         </div>
                     </fieldset>
                     <div id="eb-actions">
-                        <button id="eb-btn-all" class="eb-btn eb-btn-filled">Score all matching</button>
-                        <button id="eb-btn-one" class="eb-btn eb-btn-tonal">Score current lesson</button>
-                        <button id="eb-btn-stop" class="eb-btn eb-btn-error">Stop</button>
+                        <button id="eb-btn-all" class="eb-btn eb-btn-filled" data-i18n="scoreAllMatching">Score all matching</button>
+                        <button id="eb-btn-one" class="eb-btn eb-btn-tonal" data-i18n="scoreCurrentLesson">Score current lesson</button>
+                        <button id="eb-btn-stop" class="eb-btn eb-btn-error" data-i18n="stop">Stop</button>
                     </div>
                     <div id="eb-countdown">
-                        <span id="eb-countdown-label">Waiting</span>
+                        <span id="eb-countdown-label" data-i18n="countdownWaiting">Waiting</span>
                         <span id="eb-progress-track"><span id="eb-progress-bar"></span></span>
                     </div>
                     <div class="eb-card">
                         <div class="eb-log-header">
-                            <span class="eb-card-title">Activity log</span>
-                            <label class="eb-switch eb-switch-sm" title="Hide activity log">
+                            <span class="eb-card-title" data-i18n="activityLog">Activity log</span>
+                            <label class="eb-switch eb-switch-sm" data-i18n-title="hideActivityLog">
                                 <input id="eb-log-toggle" type="checkbox" checked aria-label="Show activity log"/>
                                 <span class="eb-switch-track"><span class="eb-switch-handle"></span></span>
                             </label>
                         </div>
                         <div id="eb-log" role="log" aria-live="polite"></div>
                     </div>
+                    <fieldset class="eb-card">
+                        <legend class="eb-card-title" data-i18n="langTitle">Language</legend>
+                        <div class="eb-select-wrap">
+                            <select id="eb-lang-select" aria-label="Language">
+                                <option value="en_US" data-i18n="langEn">English</option>
+                                <option value="zh_HK" data-i18n="langZh">中文（香港）</option>
+                                <option value="yue_HK" data-i18n="langYue">粵語（香港）</option>
+                            </select>
+                            <svg class="eb-select-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.4 8.6 12 13.2l4.6-4.6L18 10l-6 6-6-6z"/></svg>
+                        </div>
+                    </fieldset>
                 </div>
             </div>
         `;
@@ -458,7 +724,7 @@
             }
             #eb-log::-webkit-scrollbar{width:6px}
             #eb-log::-webkit-scrollbar-thumb{background:var(--eb-outline-var);border-radius:3px}
-            #eb-log:empty::before{content:'No activity yet.';color:var(--eb-outline)}
+            #eb-log:empty::after{content:attr(data-empty);color:var(--eb-outline)}
             @media (max-width:480px){
                 #eb-auto-panel{width:calc(100vw - 24px);right:12px;left:12px}
             }
@@ -470,6 +736,12 @@
         `;
         document.head.appendChild(style);
         document.body.appendChild(panel);
+
+        applyTranslations();
+
+        document.getElementById('eb-lang-select').addEventListener('change', e => {
+            setLang(e.target.value);
+        });
 
         // Ripple (Material touch feedback)
         panel.querySelectorAll('.eb-btn, .eb-icon-btn').forEach(btn => {
@@ -510,7 +782,7 @@
             isMinimized = !isMinimized;
             body.classList.toggle('collapsed', isMinimized);
             btn.classList.toggle('eb-collapsed', isMinimized);
-            btn.title = isMinimized ? 'Expand panel' : 'Collapse panel';
+            btn.title = isMinimized ? t('expandPanel') : t('collapsePanel');
             btn.setAttribute('aria-label', btn.title);
             btn.setAttribute('aria-expanded', String(!isMinimized));
         });
@@ -552,7 +824,7 @@
         document.getElementById('eb-btn-stop').addEventListener('click', () => {
             stopRequested = true;
             clearState();
-            log('Stopped.');
+            log(t('msgStopped'));
             setRunning(false);
         });
 
@@ -572,7 +844,7 @@
         if (runState && runState.running) {
             applyConfigToUI(runState.settings);
             setFilterScoreVisible(runState.settings && runState.settings.filterMode === 'score_below');
-            log('Resuming...');
+            log(t('msgResuming'));
             setTimeout(() => resume(runState), 1500);
         }
     }
@@ -584,7 +856,7 @@
         if (link) {
             link.click();
         } else {
-            log('  Link not found');
+            log(t('msgLinkNotFound'));
             return null;
         }
 
@@ -595,9 +867,9 @@
             await waitMs(500);
             overlay = document.querySelector('.overlay-player');
         }
-        if (!overlay) { log('  Overlay failed'); return null; }
+        if (!overlay) { log(t('msgOverlayFailed')); return null; }
 
-        log('  Waiting for SCORM API...');
+        log(t('msgWaitingScorm'));
         try {
             const win = overlay.contentWindow;
             for (let i = 0; i < 30; i++) {
@@ -606,7 +878,7 @@
                 await waitMs(1000);
             }
         } catch (e) {
-            log('  Access error: ' + e.message);
+            log(t('msgAccessError', e.message));
         }
 
         return overlay;
@@ -630,13 +902,13 @@
             }
             if (!found) return;
 
-            log('  Difficulty detected, picking Challenging...');
+            log(t('msgDifficultyDetected'));
 
             const doc1 = innerIframe.contentDocument;
             const challengingEl = findDeepestByText(doc1, 'Challenging');
             if (challengingEl) {
                 challengingEl.click();
-                log('  Clicked Challenging');
+                log(t('msgClickedChallenging'));
             }
             await waitMs(1000);
 
@@ -652,14 +924,14 @@
             }
             if (startBtn) {
                 startBtn.click();
-                log('  Clicked Start Lessons');
+                log(t('msgClickedStartLessons'));
             } else {
-                log('  Start btn fallback: XPath...');
+                log(t('msgStartBtnFallback'));
                 try {
                     const d = innerIframe.contentDocument;
                     const result = d.evaluate('//button-group//button', d, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
                     const btn = result.singleNodeValue;
-                    if (btn) { btn.click(); log('  Clicked via XPath'); }
+                    if (btn) { btn.click(); log(t('msgClickedViaXpath')); }
                 } catch (e) { }
             }
             await waitMs(3000);
@@ -674,13 +946,13 @@
                         await waitMs(500);
                         const sub = Array.from(doc2.querySelectorAll('button')).find(b => b.textContent.includes('Submit') && !b.disabled);
                         if (sub) sub.click();
-                        log('  Answered Q1 randomly');
+                        log(t('msgAnsweredQ1'));
                         await waitMs(500);
                     }
                 }
             } catch (e) { }
         } catch (e) {
-            log('  Difficulty error: ' + e.message);
+            log(t('msgDifficultyError', e.message));
         }
     }
 
@@ -720,7 +992,7 @@
     async function initAndCommitAPI(outerIframe, score) {
         const outerWin = outerIframe.contentWindow;
         if (!outerWin || !outerWin.API) {
-            log('  ERROR: No API');
+            log(t('msgErrorNoApi'));
             return false;
         }
         const api = outerWin.API;
@@ -729,7 +1001,7 @@
             await waitMs(500);
         }
         if (api.isInitialized !== 'true') {
-            log('  ERROR: Init failed');
+            log(t('msgErrorInitFailed'));
             return false;
         }
 
@@ -744,10 +1016,10 @@
             xhr.open('POST', commitUrl, false);
             xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             xhr.send(payload);
-            log('  POST -> HTTP ' + xhr.status);
+            log(t('msgPostHttpStatus', xhr.status));
             if (xhr.status !== 200) return false;
         } catch (e) {
-            log('  XHR error: ' + e.message);
+            log(t('msgXhrError', e.message));
             return false;
         }
 
@@ -797,18 +1069,18 @@
 
     async function doPhaseEnter(state) {
         setRunning(true);
-        log('=== ENTER: ' + (state.lessonName || state.lessonId) + ' ===');
+        log(t('msgEnter', state.lessonName || state.lessonId));
 
         const overlay = await clickOpenLesson(state.lessonId);
         if (!overlay) {
-            log('  Failed to open, skipping...');
+            log(t('msgFailedToOpen'));
             await finishAndNext(state);
             return;
         }
 
         await handleDifficultySelection(overlay);
 
-        log('  First visit done, 3s...');
+        log(t('msgFirstVisitDone'));
         await waitMs(3000);
 
         if (stopRequested) { clearState(); setRunning(false); return; }
@@ -816,17 +1088,17 @@
         state.phase = 'score';
         state.settings = readUIConfig();
         saveState(state);
-        log('  Refreshing...');
+        log(t('msgRefreshing'));
         window.location.href = LIST_URL;
     }
 
     async function doPhaseScore(state) {
         setRunning(true);
-        log('=== SCORE: ' + (state.lessonName || state.lessonId) + ' ===');
+        log(t('msgScore', state.lessonName || state.lessonId));
 
         const overlay = await clickOpenLesson(state.lessonId);
         if (!overlay) {
-            log('  Failed to open, skipping...');
+            log(t('msgFailedToOpen'));
             await finishAndNext(state);
             return;
         }
@@ -836,18 +1108,18 @@
         const cfg = readUIConfig();
         const delaySec = resolveDelaySec(cfg);
         if (delaySec > 0) {
-            log('  Delay: ' + formatSeconds(delaySec));
+            log(t('msgDelay', formatSeconds(delaySec)));
             await showCountdown(delaySec);
         }
 
         if (stopRequested) { clearState(); setRunning(false); return; }
 
         const score = resolveScore(cfg);
-        log('  Committing score: ' + score);
+        log(t('msgCommittingScore', score));
         const ok = await initAndCommitAPI(overlay, score);
-        log(ok ? '  SUCCESS!' : '  FAILED!');
+        log(t(ok ? 'msgSuccess' : 'msgFailed'));
 
-        log('  3s...');
+        log(t('msgWait3s'));
         await waitMs(3000);
 
         await finishAndNext(state);
@@ -863,12 +1135,12 @@
             state.lessonStatus = null;
             state.settings = readUIConfig();
             saveState(state);
-            log('  Next...');
+            log(t('msgNext'));
             window.location.href = LIST_URL;
         } else {
             clearState();
             setRunning(false);
-            log('  Done.');
+            log(t('msgDone'));
             window.location.href = LIST_URL;
         }
     }
@@ -880,23 +1152,23 @@
 
         const overlay = document.querySelector('.overlay-player');
         if (!overlay || !overlay.contentWindow) {
-            log('No lesson is currently open!');
+            log(t('msgNoLessonOpen'));
             return;
         }
 
         const src = overlay.getAttribute('src') || '';
         const m = src.match(/id=([^&]+)/);
-        if (!m) { log('Cannot detect lesson ID'); return; }
+        if (!m) { log(t('msgCannotDetectId')); return; }
 
         const cfg = readUIConfig();
         const lessonId = m[1];
 
         setRunning(true);
-        log('=== CURRENT LESSON ===');
+        log(t('msgCurrentLesson'));
 
         await handleDifficultySelection(overlay);
 
-        log('  First visit, 3s...');
+        log(t('msgFirstVisit'));
         await waitMs(3000);
 
         if (stopRequested) { clearState(); setRunning(false); return; }
@@ -910,7 +1182,7 @@
             lessonStatus: '',
             settings: cfg
         });
-        log('  Refreshing...');
+        log(t('msgRefreshing'));
         window.location.href = LIST_URL;
     }
 
@@ -926,7 +1198,7 @@
             lessonStatus: null,
             settings: cfg
         });
-        log('Starting batch...');
+        log(t('msgStartingBatch'));
         window.location.href = LIST_URL;
     }
 
@@ -940,7 +1212,7 @@
                 const cfg = readUIConfig();
                 const task = pickRandomTask(cfg);
                 if (!task) {
-                    log('No matching tasks! Done.');
+                    log(t('msgNoMatchingTasks'));
                     clearState();
                     setRunning(false);
                     return;
@@ -948,7 +1220,7 @@
                 state.lessonId = task.id;
                 state.lessonName = task.name;
                 state.lessonStatus = task.status;
-                log('Found: ' + task.name + ' [' + task.status + '] score=' + task.score);
+                log(t('msgFound', task.name + ' [' + task.status + '] score=' + task.score));
             }
             await doPhaseEnter(state);
         } else if (state.phase === 'score') {
