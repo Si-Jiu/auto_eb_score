@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         EB Auto Score
 // @namespace    http://tampermonkey.net/
-// @version      4.1.0
+// @version      5.0.0
 // @description  Auto submit score for EB lessons
 // @match        https://lms1.wiseman.com.hk/lms/user/secure/course/eb/select_lesson/*
 // @grant        none
@@ -415,7 +415,7 @@
             <div id="eb-panel-inner">
                 <div id="eb-panel-title">
                     <span id="eb-title-text" data-i18n="panelTitle">EB Auto Score</span>
-                    <span id="eb-version">4.1.0</span>
+                    <span id="eb-version">5.0.0</span>
                     <label class="eb-switch" data-i18n-title="switchToLight">
                         <input id="eb-theme-toggle" type="checkbox" checked aria-label="Dark mode"/>
                         <span class="eb-switch-track">
@@ -598,11 +598,10 @@
             #eb-panel-body{
                 padding:16px;display:flex;flex-direction:column;gap:12px;
                 max-height:calc(100vh - 140px);overflow-y:auto;
-                scrollbar-width:thin;scrollbar-color:var(--eb-outline-var) transparent;
+                scrollbar-width:none;
                 transition:max-height .35s var(--eb-ease),padding .35s var(--eb-ease)
             }
-            #eb-panel-body::-webkit-scrollbar{width:6px}
-            #eb-panel-body::-webkit-scrollbar-thumb{background:var(--eb-outline-var);border-radius:3px}
+            #eb-panel-body::-webkit-scrollbar{display:none}
             #eb-panel-body.collapsed{max-height:0;padding-top:0;padding-bottom:0;overflow:hidden}
             /* Cards */
             #eb-auto-panel .eb-card{
