@@ -12,7 +12,7 @@
 1. 在瀏覽器中安裝用戶腳本管理器：
    - [Tampermonkey](https://www.tampermonkey.net/)（Chrome、Firefox、Edge、Safari）
    - [Violentmonkey](https://violentmonkey.github.io/)（Chrome、Firefox、Edge）
-2. 點擊[此處](https://github.com/devcme/auto_eb_score/raw/refs/heads/main/eb_auto_score.user.js)並安裝腳本。
+2. 點擊[此處](https://github.com/Si-Jiu/auto_eb_score/releases/latest/download/eb_auto_score.user.js)並安裝腳本。
 3. 登錄 English Builder — 控制面板會自動出現在右上角。
 
 ### 更新

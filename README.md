@@ -14,7 +14,7 @@ every matching lesson automatically.
 1. Install a userscript manager in your browser:
    - [Tampermonkey](https://www.tampermonkey.net/) (Chrome, Firefox, Edge, Safari)
    - [Violentmonkey](https://violentmonkey.github.io/) (Chrome, Firefox, Edge)
-2. Click [here](https://github.com/devcme/auto_eb_score/raw/refs/heads/main/eb_auto_score.user.js) and install the script.
+2. Click [here](https://github.com/Si-Jiu/auto_eb_score/releases/latest/download/eb_auto_score.user.js) and install the script.
 3. Log in to English Builder — the control panel appears automatically in the top-right corner.
 
 ### Updating
