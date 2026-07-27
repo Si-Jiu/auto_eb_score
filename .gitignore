@@ -1,0 +1,6 @@
+node_modules/
+dist/
+*.log
+src/i18n/_registry.js
+package-lock.json
+eb_auto_score.user.js

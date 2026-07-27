@@ -1,0 +1,21 @@
+{
+  "name": "eb-auto-score",
+  "version": "5.0.0",
+  "description": "Auto submit score for EB lessons on Wiseman LMS",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "node build.js --watch"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  },
+  "allowScripts": {
+    "esbuild@0.24.2": true
+  },
+  "dependencies": {
+    "@material/web": "^2.5.0"
+  }
+}

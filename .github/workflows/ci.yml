@@ -1,0 +1,67 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+    paths-ignore:
+      - 'README*.md'
+      - 'LICENSE'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: latest
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: latest
+          cache: pnpm
+
+      - run: pnpm install
+
+      - run: pnpm run build
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: eb_auto_score.user.js
+          path: eb_auto_score.user.js
+
+  release:
+    if: github.ref_type == 'tag'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: latest
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: latest
+          cache: pnpm
+
+      - run: pnpm install
+
+      - name: Set version from tag
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+
+      - run: pnpm run build
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: eb_auto_score.user.js
+          generate_release_notes: true

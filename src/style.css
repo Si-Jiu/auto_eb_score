@@ -1,0 +1,288 @@
+:root {
+    --md-sys-color-primary: #D0BCFF;
+    --md-sys-color-on-primary: #381E72;
+    --md-sys-color-primary-container: #4F378B;
+    --md-sys-color-on-primary-container: #EADDFF;
+    --md-sys-color-secondary: #CCC2DC;
+    --md-sys-color-on-secondary: #332D41;
+    --md-sys-color-secondary-container: #4A4458;
+    --md-sys-color-on-secondary-container: #E8DEF8;
+    --md-sys-color-tertiary: #EFB8C8;
+    --md-sys-color-tertiary-container: #633B48;
+    --md-sys-color-surface: #141218;
+    --md-sys-color-on-surface: #E6E0E9;
+    --md-sys-color-surface-container-lowest: #0F0D13;
+    --md-sys-color-surface-container-low: #1D1B20;
+    --md-sys-color-surface-container: #211F26;
+    --md-sys-color-surface-container-high: #2B2930;
+    --md-sys-color-surface-container-highest: #36343B;
+    --md-sys-color-surface-variant: #49454F;
+    --md-sys-color-on-surface-variant: #CAC4D0;
+    --md-sys-color-outline: #938F99;
+    --md-sys-color-outline-variant: #49454F;
+    --md-sys-color-error: #F2B8B5;
+    --md-sys-color-on-error: #601410;
+    --md-sys-color-error-container: #8C1D18;
+    --md-sys-color-on-error-container: #F9DEDC;
+    --md-sys-color-shadow: #000000;
+    --md-sys-color-scrim: #000000;
+}
+
+.eb-theme-light {
+    --md-sys-color-primary: #6750A4;
+    --md-sys-color-on-primary: #FFFFFF;
+    --md-sys-color-primary-container: #EADDFF;
+    --md-sys-color-on-primary-container: #21005D;
+    --md-sys-color-secondary: #625B71;
+    --md-sys-color-on-secondary: #FFFFFF;
+    --md-sys-color-secondary-container: #E8DEF8;
+    --md-sys-color-on-secondary-container: #1D192B;
+    --md-sys-color-tertiary: #7D5260;
+    --md-sys-color-tertiary-container: #FFD8E4;
+    --md-sys-color-surface: #FEF7FF;
+    --md-sys-color-on-surface: #1D1B20;
+    --md-sys-color-surface-container-lowest: #FFFFFF;
+    --md-sys-color-surface-container-low: #F7F2FA;
+    --md-sys-color-surface-container: #F3EDF7;
+    --md-sys-color-surface-container-high: #ECE6F0;
+    --md-sys-color-surface-container-highest: #E6E0E9;
+    --md-sys-color-surface-variant: #E7E0EC;
+    --md-sys-color-on-surface-variant: #49454F;
+    --md-sys-color-outline: #79747E;
+    --md-sys-color-outline-variant: #CAC4D0;
+    --md-sys-color-error: #B3261E;
+    --md-sys-color-on-error: #FFFFFF;
+    --md-sys-color-error-container: #F9DEDC;
+    --md-sys-color-on-error-container: #410E0B;
+    --md-sys-color-shadow: #000000;
+    --md-sys-color-scrim: #000000;
+}
+
+/* ---- panel container (no MD3 component exists for this) ---- */
+#eb-auto-panel {
+    position: fixed;
+    top: 60px;
+    right: 16px;
+    z-index: 999999;
+    width: 328px;
+    font-family: Roboto, "Segoe UI", system-ui, sans-serif;
+    animation: eb-fade-in .3s ease;
+}
+
+@keyframes eb-fade-in {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#eb-panel-inner {
+    background: var(--md-sys-color-surface-container-low);
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 8px 12px 6px rgba(0,0,0,.15), 0 4px 4px rgba(0,0,0,.3);
+    transition: background-color .3s ease, box-shadow .3s ease;
+}
+
+/* ---- header ---- */
+#eb-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 56px;
+    padding: 0 12px 0 20px;
+    background: var(--md-sys-color-surface-container-highest);
+    cursor: grab;
+    user-select: none;
+    transition: background-color .3s ease;
+}
+
+#eb-panel-header:active { cursor: grabbing; }
+
+#eb-panel-title {
+    flex: 1;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface);
+    white-space: nowrap;
+    transition: color .3s ease;
+}
+
+#eb-panel-version {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 8px;
+    color: var(--md-sys-color-on-secondary-container);
+    background: var(--md-sys-color-secondary-container);
+    transition: background-color .3s ease, color .3s ease;
+}
+
+/* ---- icon buttons (collapse, log toggle) ---- */
+#eb-panel-header md-icon-button {
+    --md-icon-button-icon-size: 24px;
+    transition: transform .3s ease;
+}
+
+.eb-collapsed { transform: rotate(180deg); }
+
+#eb-btn-log md-icon-button {
+    --md-icon-button-icon-size: 20px;
+}
+
+/* ---- theme toggle (plain button, two overlapping icons) ---- */
+.eb-theme-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--md-sys-color-on-surface-variant);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: color .3s ease;
+}
+
+.eb-theme-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0;
+    transition: opacity .15s linear;
+}
+
+.eb-theme-btn:hover::before { opacity: .08; }
+.eb-theme-btn:focus-visible::before { opacity: .1; }
+
+.eb-theme-btn svg {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    transition: opacity .3s ease, transform .3s ease;
+}
+
+#eb-theme-icon-dark { opacity: 1; transform: rotate(0deg); }
+#eb-theme-icon-light { opacity: 0; transform: rotate(-180deg); }
+
+.eb-theme-light #eb-theme-icon-dark { opacity: 0; transform: rotate(180deg); }
+.eb-theme-light #eb-theme-icon-light { opacity: 1; transform: rotate(0deg); }
+
+/* ---- body ---- */
+#eb-panel-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: 50vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+    transition: max-height .35s ease, padding .35s ease;
+}
+
+#eb-panel-body::-webkit-scrollbar { display: none; }
+#eb-panel-body.collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; }
+
+/* ---- footer (pinned buttons) ---- */
+#eb-panel-footer {
+    padding: 8px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.eb-actions { display: flex; flex-direction: column; gap: 8px; }
+.eb-hidden { display: none; }
+.eb-visible { display: flex; }
+.eb-card {
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: border-color .3s ease;
+}
+
+.eb-card legend {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface);
+    transition: color .3s ease;
+}
+
+/* ---- layout helpers ---- */
+.eb-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.eb-col { display: flex; flex-direction: column; gap: 8px; }
+
+.eb-support {
+    font-size: 12px;
+    color: var(--md-sys-color-on-surface-variant);
+    transition: color .3s ease;
+}
+
+/* ---- countdown ---- */
+#eb-countdown {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+    border-radius: 12px;
+    background: var(--md-sys-color-surface-container-highest);
+    transition: background-color .3s ease;
+}
+
+#eb-countdown.eb-visible { display: flex; }
+
+#eb-countdown-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--md-sys-color-primary);
+    transition: color .3s ease;
+}
+
+/* ---- log ---- */
+#eb-log {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: var(--md-sys-color-surface-container-lowest);
+    color: var(--md-sys-color-on-surface-variant);
+    font-family: "Roboto Mono", Consolas, monospace;
+    font-size: 11px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+    scrollbar-width: thin;
+    scrollbar-color: var(--md-sys-color-outline-variant) transparent;
+    transition: max-height .25s ease, opacity .2s ease, background-color .3s ease, color .3s ease;
+}
+
+#eb-log.eb-log-hidden {
+    max-height: 0; opacity: 0; padding-top: 0; padding-bottom: 0; margin-top: -12px;
+    overflow: hidden; border: 0;
+}
+
+#eb-log:empty::after {
+    content: attr(data-empty);
+    color: var(--md-sys-color-outline);
+    transition: color .3s ease;
+}
+
+/* ---- responsive ---- */
+@media (max-width: 480px) {
+    #eb-auto-panel { width: calc(100vw - 24px); right: 12px; left: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #eb-auto-panel *,
+    #eb-auto-panel *::before,
+    #eb-auto-panel *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+    }
+}
